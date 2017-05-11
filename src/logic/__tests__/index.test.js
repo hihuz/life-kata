@@ -1,9 +1,4 @@
-import {
-  countLiveNeighbors,
-  getNextCellState,
-  getCurCellState,
-  getNeighborsCoords
-} from "../index";
+import { countLiveNeighbors, getNextCellState, getCurCellState, getNeighbors } from "../index";
 
 describe("countLiveNeighbors", () => {
   test("should be a function", () => {
@@ -111,37 +106,43 @@ describe("getCurrentCellState", () => {
     expect(actual).toEqual(expected);
   });
 
-  test("should return 0 if coordinates are outside the board", () => {
+  test("should return undefined if coordinates are outside the board", () => {
     const x = 4;
     const y = 1;
-    const expected = 0;
+    const expected = undefined;
     const actual = getCurCellState({ board, x, y });
     expect(actual).toEqual(expected);
   });
 });
 
-describe("getNeighborsCoords", () => {
+describe("getNeighbors", () => {
   const board = [[1, 0, 1, 0], [0, 1, 0, 1], [1, 0, 1, 0], [1, 0, 0, 1]];
 
-  test("should take a board and x/y coordinates and return an array of length 8", () => {
+  test("should take a board and x/y coordinates and return an array of numbers", () => {
     const x = 2;
     const y = 2;
-    const expected = 8;
-    const actual = getNeighborsCoords({ board, x, y }).length;
+    const neighbors = getNeighbors({ board, x, y });
+    const expected = neighbors.length;
+    const actual = getNeighbors({ board, x, y }).reduce(
+      (acc, cur) => (typeof cur === "number" ? acc + 1 : acc),
+      0
+    );
     expect(actual).toEqual(expected);
   });
 
-  test("should take a board and x/y coordinates and return an array of coordinates", () => {
+  test("should return the actual neighbors values starting from top left", () => {
     const x = 2;
     const y = 2;
-    const expected = { xCount: 8, yCount: 8 };
-    const actual = getNeighborsCoords({ board, x, y }).reduce(
-      (acc, cur) => ({
-        xCount: cur.hasOwnProperty("x") ? acc.xCount + 1 : acc.xCount,
-        yCount: cur.hasOwnProperty("y") ? acc.yCount + 1 : acc.yCount
-      }),
-      { xCount: 0, yCount: 0 }
-    );
+    const expected = [1, 0, 1, 0, 0, 0, 0, 1];
+    const actual = getNeighbors({ board, x, y });
+    expect(actual).toEqual(expected);
+  });
+
+  test("should return only neighbors that are actually inside the board", () => {
+    const x = 0;
+    const y = 0;
+    const expected = [0, 0, 1];
+    const actual = getNeighbors({ board, x, y });
     expect(actual).toEqual(expected);
   });
 });

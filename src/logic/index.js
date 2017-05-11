@@ -13,10 +13,24 @@ export const getNextCellState = ({ cell, liveNeighbors }) => {
 };
 
 export const getCurCellState = ({ board, x, y }) =>
-  x >= board[0].length || y >= board.length ? 0 : board[y][x];
+  x >= board[0].length || x < 0 || y >= board.length || y < 0 ? undefined : board[y][x];
 
-export const getNeighborsCoords = ({ board, x, y }) => {
-  const coords = Array.from(new Array(8), () => ({ x: 1, y: 1 }));
-
-  return coords;
+// :-(
+export const getNeighbors = ({ board, x, y }) => {
+  const neighbors = [];
+  for (let i = Math.max(0, y - 1); i <= Math.min(board.length, y + 1); i++) {
+    for (let j = Math.max(0, x - 1); j <= Math.min(board[0].length, x + 1); j++) {
+      if (i != y || j != x) {
+        neighbors.push(board[i][j]);
+      }
+    }
+  }
+  return neighbors;
 };
+
+class Board {
+  constructor(width, height) {
+    this.width = width;
+    this.height = height;
+  }
+}
