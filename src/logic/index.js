@@ -28,9 +28,5 @@ export const getNeighbors = ({ board, x, y }) => {
   return neighbors;
 };
 
-class Board {
-  constructor(width, height) {
-    this.width = width;
-    this.height = height;
-  }
-}
+export const generateBoard = ({ width, height }) =>
+  new Array(height).fill(new Array(width).fill(0));

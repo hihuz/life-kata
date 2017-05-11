@@ -1,4 +1,10 @@
-import { countLiveNeighbors, getNextCellState, getCurCellState, getNeighbors } from "../index";
+import {
+  countLiveNeighbors,
+  getNextCellState,
+  getCurCellState,
+  getNeighbors,
+  generateBoard
+} from "../index";
 
 describe("countLiveNeighbors", () => {
   test("should be a function", () => {
@@ -143,6 +149,37 @@ describe("getNeighbors", () => {
     const y = 0;
     const expected = [0, 0, 1];
     const actual = getNeighbors({ board, x, y });
+    expect(actual).toEqual(expected);
+  });
+});
+
+describe("generateBoard", () => {
+  test("should return an array of length height", () => {
+    const width = 100;
+    const height = 42;
+    const expected = height;
+    const actual = generateBoard({ width, height }).length;
+    expect(actual).toEqual(expected);
+  });
+
+  test("should return an array made of arrays of length width", () => {
+    const width = 100;
+    const height = 42;
+    const expected = height;
+    const actual = generateBoard({ width, height }).reduce(
+      (acc, cur) => (cur.length === width ? acc + 1 : acc),
+      0
+    );
+    expect(actual).toEqual(expected);
+  });
+
+  test("should return a 'dead' array filled with 0s", () => {
+    const width = 100;
+    const height = 42;
+    const expected = width * height;
+    const actual = generateBoard({ width, height })
+      .reduce((acc, cur) => [...acc, ...cur], [])
+      .reduce((acc, cur) => (cur === 0 ? acc + 1 : acc), 0);
     expect(actual).toEqual(expected);
   });
 });
