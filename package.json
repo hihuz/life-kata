@@ -10,7 +10,8 @@
     "dev": "webpack-dev-server --env.dev",
     "test": "jest",
     "update-test": "jest -u",
-    "cover": "yarn test -- --coverage"
+    "cover": "yarn test -- --coverage",
+    "watch-test": "yarn test -- --watch"
   },
   "dependencies": {
     "react": "^15.5.4",
