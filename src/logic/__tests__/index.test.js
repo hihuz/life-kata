@@ -3,7 +3,10 @@ import {
   getNextCellState,
   getCurCellState,
   getNeighbors,
-  generateBoard
+  generateBoard,
+  convertPosToCoords,
+  getUniqueNumbers,
+  fillBoard
 } from "../index";
 
 describe("countLiveNeighbors", () => {
@@ -180,6 +183,62 @@ describe("generateBoard", () => {
     const actual = generateBoard({ width, height })
       .reduce((acc, cur) => [...acc, ...cur], [])
       .reduce((acc, cur) => (cur === 0 ? acc + 1 : acc), 0);
+    expect(actual).toEqual(expected);
+  });
+});
+
+describe("getUniqueNumbers", () => {
+  test("should return an array", () => {
+    const expected = true;
+    const actual = Array.isArray(getUniqueNumbers({}));
+    expect(actual).toEqual(expected);
+  });
+
+  test("should take a length, an amount and return an array of expected length", () => {
+    const amount = 10;
+    const length = 100;
+    const expected = amount;
+    const actual = getUniqueNumbers({ length, amount }).length;
+    expect(actual).toEqual(expected);
+  });
+
+  test("should return an array of numbers", () => {
+    const amount = 1;
+    const length = 1;
+    const expected = [0];
+    const actual = getUniqueNumbers({ length, amount });
+    expect(actual).toEqual(expected);
+  });
+});
+
+// describe("convertPosToCoords", () => {
+//   test("should return an array of coords", () => {
+
+//   });
+// });
+
+describe("fillBoard", () => {
+  const board = [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]];
+  const coords = [{ x: 0, y: 0 }, { x: 3, y: 2 }, { x: 1, y: 3 }];
+
+  test("should take a board and return a board of same size", () => {
+    const filledBoard = fillBoard({ board });
+    const expected = board[0].length * board.length;
+    const actual = filledBoard[0].length * filledBoard.length;
+    expect(actual).toEqual(expected);
+  });
+
+  test("should take a board and an array of coords and fill the right amount of cells", () => {
+    const expected = coords.length;
+    const actual = fillBoard({ board, coords })
+      .reduce((acc, cur) => [...acc, ...cur], [])
+      .reduce((acc, cur) => (cur === 1 ? acc + 1 : acc), 0);
+    expect(actual).toEqual(expected);
+  });
+
+  test("should fill the cells in the correct positions", () => {
+    const expected = [[1, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 1], [0, 1, 0, 0]];
+    const actual = fillBoard({ board, coords });
     expect(actual).toEqual(expected);
   });
 });

@@ -30,3 +30,21 @@ export const getNeighbors = ({ board, x, y }) => {
 
 export const generateBoard = ({ width, height }) =>
   new Array(height).fill(new Array(width).fill(0));
+
+export const getUniqueNumbers = ({ length = 0, amount = 0 }) => {
+  const availableCodes = Array.from(new Array(length), (_, i) => i);
+  const shuffledCodes = availableCodes.sort((a, b) =>
+    Math.floor(Math.random() * availableCodes.length)
+  );
+  return shuffledCodes.slice(0, amount);
+};
+
+// export const convertPosToCoords = ({ width, height, pos }) => pos;
+
+export const fillBoard = ({ board = [], coords = [] }) => {
+  const filled = [...board];
+  coords.forEach(({ x, y }) => {
+    filled[y][x] = 1;
+  });
+  return filled;
+};
