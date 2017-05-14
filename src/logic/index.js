@@ -55,10 +55,12 @@ const CreateLife = ({ width = 0, height = 0, amount = 0 }) => {
   const coords = convertPosToCoords({ width, pos });
   const emptyBoard = generateBoard({ width, height });
   const board = fillBoard({ board: emptyBoard, coords });
+  const running = false;
   let runId;
 
   return {
     board,
+    running,
     tick() {
       const nextBoard = this.board.map((line, y) =>
         line.map((cell, x) => {
@@ -70,10 +72,20 @@ const CreateLife = ({ width = 0, height = 0, amount = 0 }) => {
       this.board = nextBoard;
     },
     run(interval = 200) {
-      runId = setInterval(this.tick, interval);
+      if (!this.running) {
+        this.running = true;
+        runId = setInterval(this.tick, interval);
+      }
     },
-    stop() {},
-    reset() {}
+    stop() {
+      if (this.running) {
+        this.running = false;
+        clearInterval(runId);
+      }
+    },
+    reset() {
+      this.board = board;
+    }
   };
 };
 

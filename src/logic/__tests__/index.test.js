@@ -9,6 +9,8 @@ import CreateLife, {
   fillBoard
 } from "../index";
 
+jest.useFakeTimers();
+
 describe("countLiveNeighbors", () => {
   test("should be a function", () => {
     const expected = "function";
@@ -294,18 +296,19 @@ describe("fillBoard", () => {
 describe("CreateLife", () => {
   test("should return an object with a board tick, run, stop and reset prop", () => {
     const Life = CreateLife({});
-    const expected = ["board", "tick", "run", "stop", "reset"];
+    const expected = ["board", "running", "tick", "run", "stop", "reset"];
     const actual = Object.keys(Life);
     expect(actual).toEqual(expected);
   });
 
-  test("tick, run, stop, and reset should be methods, but not board", () => {
+  test("tick, run, stop, and reset should be methods, but not board & running", () => {
     const Life = CreateLife({});
     expect(typeof Life.tick).toEqual("function");
     expect(typeof Life.run).toEqual("function");
     expect(typeof Life.stop).toEqual("function");
     expect(typeof Life.reset).toEqual("function");
     expect(typeof Life.board).not.toEqual("function");
+    expect(typeof Life.running).not.toEqual("function");
   });
 });
 
@@ -333,6 +336,15 @@ describe("CreateLife: board prop", () => {
   });
 });
 
+describe("CreateLife: running prop", () => {
+  test("should be false at init", () => {
+    const Life = CreateLife({});
+    const expected = false;
+    const actual = Life.running;
+    expect(actual).toEqual(expected);
+  });
+});
+
 describe("CreateLife: tick method", () => {
   test("should be a method", () => {
     const Life = CreateLife({});
@@ -356,30 +368,98 @@ describe("CreateLife: tick method", () => {
   });
 });
 
-describe("CreateLife: run method", () => {
-  jest.useFakeTimers();
+describe("CreateLife: stop method", () => {
   const width = 3;
   const height = 3;
   const amount = 3;
-  let Life = CreateLife({ width, height, amount });
 
-  beforeEach(() => {
-    Life.tick = jest.fn();
+  test("should be a method", () => {
+    const Life = CreateLife({ width, height, amount });
+    const expected = "function";
+    const actual = typeof Life.stop;
+    expect(actual).toEqual(expected);
   });
-  afterEach(() => {
+
+  test("should stop the running timer (if the game is already running)", () => {
+    const Life = CreateLife({ width, height, amount });
+    Life.tick = jest.fn();
+    const interval = 300;
+    Life.run(interval);
+    jest.runTimersToTime(interval * 2);
+    Life.stop();
+    jest.runTimersToTime(interval * 4);
+    expect(Life.tick.mock.calls.length).toBe(2);
     Life.tick.mockReset();
   });
 
+  test("should be a noop if game is not running", () => {
+    const Life = CreateLife({ width, height, amount });
+    const stateBefore = { ...Life };
+    Life.stop();
+    const stateAfter = { ...Life };
+    expect(stateAfter).toEqual(stateBefore);
+  });
+});
+
+describe("CreateLife: run method", () => {
+  const width = 3;
+  const height = 3;
+  const amount = 3;
+
   test("should be a method", () => {
+    const Life = CreateLife({ width, height, amount });
     const expected = "function";
     const actual = typeof Life.run;
     expect(actual).toEqual(expected);
   });
 
-  test("should call tick at the given interval", () => {
+  test("if game is not running (init), should call tick at the given interval", () => {
+    const Life = CreateLife({ width, height, amount });
+    Life.tick = jest.fn();
     const interval = 500;
     Life.run(interval);
     jest.runTimersToTime(interval * 3);
     expect(Life.tick.mock.calls.length).toBe(3);
+    Life.tick.mockReset();
+  });
+
+  test("should set running to true", () => {
+    const Life = CreateLife({ width, height, amount });
+    Life.running = false;
+    Life.run();
+    const expected = true;
+    const actual = Life.running;
+    expect(actual).toEqual(expected);
+  });
+
+  test("should be a noop if game is already running", () => {
+    const Life = CreateLife({ width, height, amount });
+    Life.run();
+    const stateBefore = { ...Life };
+    Life.run();
+    const stateAfter = { ...Life };
+    expect(stateAfter).toEqual(stateBefore);
+  });
+});
+
+describe("CreateLife: reset method", () => {
+  const width = 3;
+  const height = 3;
+  const amount = 3;
+
+  test("should be a method", () => {
+    const Life = CreateLife({ width, height, amount });
+    const expected = "function";
+    const actual = typeof Life.reset;
+    expect(actual).toEqual(expected);
+  });
+
+  test("should reset the board to its initial state", () => {
+    const Life = CreateLife({ width, height, amount });
+    const initialBoard = Life.board.map(line => [...line]);
+    Life.tick();
+    Life.reset();
+    const resetBoard = Life.board.map(line => [...line]);
+    expect(resetBoard).toEqual(initialBoard);
   });
 });
