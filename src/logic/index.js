@@ -50,3 +50,9 @@ export const fillBoard = ({ board = [], coords = [] }) => {
   });
   return filled;
 };
+
+const CreateLife = ({ width = 0, height = 0, amount = 0 }) => ({
+    board: []
+  });
+
+export default CreateLife;

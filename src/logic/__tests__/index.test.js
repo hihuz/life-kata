@@ -1,4 +1,4 @@
-import {
+import CreateLife, {
   countLiveNeighbors,
   getNextCellState,
   getCurCellState,
@@ -257,6 +257,15 @@ describe("fillBoard", () => {
   test("should fill the cells in the correct positions", () => {
     const expected = [[1, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 1], [0, 1, 0, 0]];
     const actual = fillBoard({ board, coords });
+    expect(actual).toEqual(expected);
+  });
+});
+
+describe("CreateLife", () => {
+  test("should return a Life type object with a board prop", () => {
+    const Life = CreateLife({});
+    const expected = ["board"];
+    const actual = Object.keys(Life);
     expect(actual).toEqual(expected);
   });
 });
