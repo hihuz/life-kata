@@ -12,9 +12,6 @@ export const getNextCellState = ({ cell = 0, liveNeighbors = 0 }) => {
   return 0;
 };
 
-export const getCurCellState = ({ board = [[]], x = 0, y = 0 }) =>
-  x >= board[0].length || x < 0 || y >= board.length || y < 0 ? undefined : board[y][x];
-
 // :-(
 export const getNeighbors = ({ board = [], x = 0, y = 0 }) => {
   const neighbors = [];

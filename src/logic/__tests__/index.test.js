@@ -1,7 +1,6 @@
 import CreateLife, {
   countLiveNeighbors,
   getNextCellState,
-  getCurCellState,
   getNeighbors,
   generateBoard,
   convertPosToCoords,
@@ -98,48 +97,6 @@ describe("getNextCellState", () => {
     const cell = "boo";
     const expected = 0;
     const actual = getNextCellState({ cell, liveNeighbors });
-    expect(actual).toEqual(expected);
-  });
-});
-
-describe("getCurrentCellState", () => {
-  const board = [[1, 0, 1, 0], [0, 1, 0, 1], [1, 0, 1, 0], [1, 0, 0, 1]];
-
-  test("should take a board and x/y coordinates and return the state of the cell 1", () => {
-    const x = 0;
-    const y = 0;
-    const expected = 1;
-    const actual = getCurCellState({ board, x, y });
-    expect(actual).toEqual(expected);
-  });
-
-  test("should default to undefined", () => {
-    const expected = undefined;
-    const actual = getCurCellState({});
-    expect(actual).toEqual(expected);
-  });
-
-  test("should take a board and x/y coordinates and return the state of the cell 2", () => {
-    const x = 3;
-    const y = 2;
-    const expected = 0;
-    const actual = getCurCellState({ board, x, y });
-    expect(actual).toEqual(expected);
-  });
-
-  test("should take a board and x/y coordinates and return the state of the cell 3", () => {
-    const x = 1;
-    const y = 1;
-    const expected = 1;
-    const actual = getCurCellState({ board, x, y });
-    expect(actual).toEqual(expected);
-  });
-
-  test("should return undefined if coordinates are outside the board", () => {
-    const x = 4;
-    const y = 1;
-    const expected = undefined;
-    const actual = getCurCellState({ board, x, y });
     expect(actual).toEqual(expected);
   });
 });
