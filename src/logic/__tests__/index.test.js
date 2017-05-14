@@ -16,6 +16,12 @@ describe("countLiveNeighbors", () => {
     expect(actual).toEqual(expected);
   });
 
+  test("should default to an empty array", () => {
+    const expected = 0;
+    const actual = countLiveNeighbors();
+    expect(actual).toEqual(expected);
+  });
+
   test("should count the number of 1s in the passed array", () => {
     const neighbors = [1, 0, 1, 0, 0, 0, 1, 0, 0];
     const expected = 3;
@@ -28,6 +34,12 @@ describe("getNextCellState", () => {
   test("should be a function", () => {
     const expected = "function";
     const actual = typeof getNextCellState;
+    expect(actual).toEqual(expected);
+  });
+
+  test("should default to 0 / 0", () => {
+    const expected = 0;
+    const actual = getNextCellState({});
     expect(actual).toEqual(expected);
   });
 
@@ -99,6 +111,12 @@ describe("getCurrentCellState", () => {
     expect(actual).toEqual(expected);
   });
 
+  test("should default to undefined", () => {
+    const expected = undefined;
+    const actual = getCurCellState({});
+    expect(actual).toEqual(expected);
+  });
+
   test("should take a board and x/y coordinates and return the state of the cell 2", () => {
     const x = 3;
     const y = 2;
@@ -157,6 +175,12 @@ describe("getNeighbors", () => {
 });
 
 describe("generateBoard", () => {
+  test("should default to []", () => {
+    const expected = [];
+    const actual = generateBoard({});
+    expect(actual).toEqual(expected);
+  });
+
   test("should return an array of length height", () => {
     const width = 100;
     const height = 42;
@@ -239,8 +263,14 @@ describe("fillBoard", () => {
   const board = [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]];
   const coords = [{ x: 0, y: 0 }, { x: 3, y: 2 }, { x: 1, y: 3 }];
 
+  test("should default to []", () => {
+    const expected = [];
+    const actual = fillBoard({});
+    expect(actual).toEqual(expected);
+  });
+
   test("should take a board and return a board of same size", () => {
-    const filledBoard = fillBoard({ board });
+    const filledBoard = fillBoard({ board, coords });
     const expected = board[0].length * board.length;
     const actual = filledBoard[0].length * filledBoard.length;
     expect(actual).toEqual(expected);
@@ -262,10 +292,94 @@ describe("fillBoard", () => {
 });
 
 describe("CreateLife", () => {
-  test("should return a Life type object with a board prop", () => {
+  test("should return an object with a board tick, run, stop and reset prop", () => {
     const Life = CreateLife({});
-    const expected = ["board"];
+    const expected = ["board", "tick", "run", "stop", "reset"];
     const actual = Object.keys(Life);
     expect(actual).toEqual(expected);
+  });
+
+  test("tick, run, stop, and reset should be methods, but not board", () => {
+    const Life = CreateLife({});
+    expect(typeof Life.tick).toEqual("function");
+    expect(typeof Life.run).toEqual("function");
+    expect(typeof Life.stop).toEqual("function");
+    expect(typeof Life.reset).toEqual("function");
+    expect(typeof Life.board).not.toEqual("function");
+  });
+});
+
+describe("CreateLife: board prop", () => {
+  test("should be an array", () => {
+    const Life = CreateLife({});
+    const expected = true;
+    const actual = Array.isArray(Life.board);
+    expect(actual).toEqual(expected);
+  });
+
+  test("should be init based off passed width/height/amount", () => {
+    const width = 120;
+    const height = 100;
+    const amount = 42;
+    const Life = CreateLife({ width, height, amount });
+    expect(Life.board.length).toEqual(height);
+    expect(Life.board[0].length).toEqual(width);
+
+    const actualAmount = Life.board
+      .reduce((acc, cur) => [...acc, ...cur], [])
+      .reduce((acc, cur) => (cur === 1 ? acc + 1 : acc), 0);
+
+    expect(actualAmount).toEqual(amount);
+  });
+});
+
+describe("CreateLife: tick method", () => {
+  test("should be a method", () => {
+    const Life = CreateLife({});
+    const expected = "function";
+    const actual = typeof Life.tick;
+    expect(actual).toEqual(expected);
+  });
+
+  test("should update the state of the board once", () => {
+    const board = [[1, 0, 0], [0, 1, 0], [0, 0, 1]];
+    const width = 3;
+    const height = 3;
+    const amount = 3;
+    let Life = CreateLife({ width, height, amount });
+    // override the created board to have a deterministic test
+    Life.board = board;
+    const expected = [[0, 0, 0], [0, 1, 0], [0, 0, 0]];
+    Life.tick();
+    const actual = Life.board;
+    expect(actual).toEqual(expected);
+  });
+});
+
+describe("CreateLife: run method", () => {
+  jest.useFakeTimers();
+  const width = 3;
+  const height = 3;
+  const amount = 3;
+  let Life = CreateLife({ width, height, amount });
+
+  beforeEach(() => {
+    Life.tick = jest.fn();
+  });
+  afterEach(() => {
+    Life.tick.mockReset();
+  });
+
+  test("should be a method", () => {
+    const expected = "function";
+    const actual = typeof Life.run;
+    expect(actual).toEqual(expected);
+  });
+
+  test("should call tick at the given interval", () => {
+    const interval = 500;
+    Life.run(interval);
+    jest.runTimersToTime(interval * 3);
+    expect(Life.tick.mock.calls.length).toBe(3);
   });
 });

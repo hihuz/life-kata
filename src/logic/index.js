@@ -1,3 +1,5 @@
+import shuffle from "lodash/shuffle";
+
 export const countLiveNeighbors = (neighbors = []) =>
   neighbors.reduce((acc, cur) => (cur ? acc + 1 : acc), 0);
 
@@ -10,15 +12,15 @@ export const getNextCellState = ({ cell = 0, liveNeighbors = 0 }) => {
   return 0;
 };
 
-export const getCurCellState = ({ board = [], x = 0, y = 0 }) =>
+export const getCurCellState = ({ board = [[]], x = 0, y = 0 }) =>
   x >= board[0].length || x < 0 || y >= board.length || y < 0 ? undefined : board[y][x];
 
 // :-(
 export const getNeighbors = ({ board = [], x = 0, y = 0 }) => {
   const neighbors = [];
-  for (let i = Math.max(0, y - 1); i <= Math.min(board.length, y + 1); i++) {
-    for (let j = Math.max(0, x - 1); j <= Math.min(board[0].length, x + 1); j++) {
-      if (i != y || j != x) {
+  for (let i = Math.max(0, y - 1); i <= Math.min(board.length - 1, y + 1); i++) {
+    for (let j = Math.max(0, x - 1); j <= Math.min(board[0].length - 1, x + 1); j++) {
+      if (i !== y || j !== x) {
         neighbors.push(board[i][j]);
       }
     }
@@ -31,10 +33,7 @@ export const generateBoard = ({ width = 0, height = 0 }) =>
 
 export const getUniqueNumbers = ({ length = 0, amount = 0 }) => {
   const availableCodes = Array.from(new Array(length), (_, i) => i);
-  const shuffledCodes = availableCodes.sort((a, b) =>
-    Math.floor(Math.random() * availableCodes.length)
-  );
-  return shuffledCodes.slice(0, amount);
+  return shuffle(availableCodes).slice(0, amount);
 };
 
 export const convertPosToCoords = ({ width = 0, pos = [] }) =>
@@ -44,15 +43,38 @@ export const convertPosToCoords = ({ width = 0, pos = [] }) =>
   }));
 
 export const fillBoard = ({ board = [], coords = [] }) => {
-  const filled = [...board];
+  const filled = board.map(line => [...line]);
   coords.forEach(({ x, y }) => {
     filled[y][x] = 1;
   });
   return filled;
 };
 
-const CreateLife = ({ width = 0, height = 0, amount = 0 }) => ({
-    board: []
-  });
+const CreateLife = ({ width = 0, height = 0, amount = 0 }) => {
+  const pos = getUniqueNumbers({ length: width * height, amount });
+  const coords = convertPosToCoords({ width, pos });
+  const emptyBoard = generateBoard({ width, height });
+  const board = fillBoard({ board: emptyBoard, coords });
+  let runId;
+
+  return {
+    board,
+    tick() {
+      const nextBoard = this.board.map((line, y) =>
+        line.map((cell, x) => {
+          const neighbors = getNeighbors({ board: this.board, x, y });
+          const liveNeighbors = countLiveNeighbors(neighbors);
+          return getNextCellState({ cell, liveNeighbors });
+        })
+      );
+      this.board = nextBoard;
+    },
+    run(interval = 200) {
+      runId = setInterval(this.tick, interval);
+    },
+    stop() {},
+    reset() {}
+  };
+};
 
 export default CreateLife;
