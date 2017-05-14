@@ -14,3 +14,24 @@ body {
   line-height: 1.6;
   margin: 0;
 }
+
+.life-grid {
+  margin: 10px auto;
+  display: flex;
+  flex-wrap: wrap;
+  background-color: #ccc;
+}
+
+.life-line {
+  display: flex;
+}
+
+.life-cell {
+  border: 1px solid #333;
+  width: 10px;
+  height: 10px;
+}
+
+.life-cell.alive {
+  background-color: #777;
+}
