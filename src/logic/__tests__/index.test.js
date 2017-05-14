@@ -33,7 +33,7 @@ describe("getNextCellState", () => {
 
   test("should return 1 if passed cell is dead and passed count is 3", () => {
     const liveNeighbors = 3;
-    const cell = { state: 0 };
+    const cell = 0;
     const expected = 1;
     const actual = getNextCellState({ cell, liveNeighbors });
     expect(actual).toEqual(expected);
@@ -41,7 +41,7 @@ describe("getNextCellState", () => {
 
   test("should return 0 if passed cell is dead and passed count isn't 3", () => {
     const liveNeighbors = 2;
-    const cell = { state: 0 };
+    const cell = 0;
     const expected = 0;
     const actual = getNextCellState({ cell, liveNeighbors });
     expect(actual).toEqual(expected);
@@ -49,7 +49,7 @@ describe("getNextCellState", () => {
 
   test("should return 0 if passed count is > 3", () => {
     const liveNeighbors = 4;
-    const cell = { state: 1 };
+    const cell = 1;
     const expected = 0;
     const actual = getNextCellState({ cell, liveNeighbors });
     expect(actual).toEqual(expected);
@@ -57,7 +57,7 @@ describe("getNextCellState", () => {
 
   test("should return 1 if passed cell is alive and passed count is 2", () => {
     const liveNeighbors = 2;
-    const cell = { state: 1 };
+    const cell = 1;
     const expected = 1;
     const actual = getNextCellState({ cell, liveNeighbors });
     expect(actual).toEqual(expected);
@@ -65,7 +65,7 @@ describe("getNextCellState", () => {
 
   test("should return 1 if passed cell is alive and passed count is 3", () => {
     const liveNeighbors = 3;
-    const cell = { state: 1 };
+    const cell = 1;
     const expected = 1;
     const actual = getNextCellState({ cell, liveNeighbors });
     expect(actual).toEqual(expected);
@@ -73,7 +73,7 @@ describe("getNextCellState", () => {
 
   test("should return 0 if passed cell is dead and passed count is 2", () => {
     const liveNeighbors = 2;
-    const cell = { state: 0 };
+    const cell = 0;
     const expected = 0;
     const actual = getNextCellState({ cell, liveNeighbors });
     expect(actual).toEqual(expected);
@@ -81,7 +81,7 @@ describe("getNextCellState", () => {
 
   test("should return 0 if passed count is less than 2", () => {
     const liveNeighbors = 1;
-    const cell = { state: "boo" };
+    const cell = "boo";
     const expected = 0;
     const actual = getNextCellState({ cell, liveNeighbors });
     expect(actual).toEqual(expected);

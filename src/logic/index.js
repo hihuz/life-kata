@@ -3,9 +3,9 @@ export const countLiveNeighbors = neighbors =>
     ? neighbors.reduce((acc, cur) => (cur ? acc + 1 : acc), 0)
     : 0;
 
-export const getNextCellState = ({ cell, liveNeighbors }) => {
+export const getNextCellState = ({ cell = 0, liveNeighbors = 0 }) => {
   if (liveNeighbors === 2) {
-    return cell.state;
+    return cell;
   } else if (liveNeighbors === 3) {
     return 1;
   }
