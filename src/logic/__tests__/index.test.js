@@ -211,11 +211,29 @@ describe("getUniqueNumbers", () => {
   });
 });
 
-// describe("convertPosToCoords", () => {
-//   test("should return an array of coords", () => {
+describe("convertPosToCoords", () => {
+  test("should return an array", () => {
+    const expected = true;
+    const actual = Array.isArray(convertPosToCoords({}));
+    expect(actual).toEqual(expected);
+  });
 
-//   });
-// });
+  test("should convert pos array to coords based off passed width 1", () => {
+    const width = 2;
+    const pos = [2, 3, 6, 8];
+    const expected = [{ x: 0, y: 1 }, { x: 1, y: 1 }, { x: 0, y: 3 }, { x: 0, y: 4 }];
+    const actual = convertPosToCoords({ width, pos });
+    expect(actual).toEqual(expected);
+  });
+
+  test("should convert pos array to coords based off passed width 2", () => {
+    const width = 10;
+    const pos = [0, 5, 42, 65];
+    const expected = [{ x: 0, y: 0 }, { x: 5, y: 0 }, { x: 2, y: 4 }, { x: 5, y: 6 }];
+    const actual = convertPosToCoords({ width, pos });
+    expect(actual).toEqual(expected);
+  });
+});
 
 describe("fillBoard", () => {
   const board = [[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]];

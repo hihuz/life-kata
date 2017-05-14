@@ -39,7 +39,11 @@ export const getUniqueNumbers = ({ length = 0, amount = 0 }) => {
   return shuffledCodes.slice(0, amount);
 };
 
-// export const convertPosToCoords = ({ width, height, pos }) => pos;
+export const convertPosToCoords = ({ width = 0, pos = [] }) =>
+  pos.map(item => ({
+    x: item % width,
+    y: Math.floor(item / width)
+  }));
 
 export const fillBoard = ({ board = [], coords = [] }) => {
   const filled = [...board];
