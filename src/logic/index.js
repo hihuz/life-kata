@@ -1,7 +1,5 @@
-export const countLiveNeighbors = neighbors =>
-  neighbors && typeof neighbors === "object"
-    ? neighbors.reduce((acc, cur) => (cur ? acc + 1 : acc), 0)
-    : 0;
+export const countLiveNeighbors = (neighbors = []) =>
+  neighbors.reduce((acc, cur) => (cur ? acc + 1 : acc), 0);
 
 export const getNextCellState = ({ cell = 0, liveNeighbors = 0 }) => {
   if (liveNeighbors === 2) {
@@ -12,11 +10,11 @@ export const getNextCellState = ({ cell = 0, liveNeighbors = 0 }) => {
   return 0;
 };
 
-export const getCurCellState = ({ board, x, y }) =>
+export const getCurCellState = ({ board = [], x = 0, y = 0 }) =>
   x >= board[0].length || x < 0 || y >= board.length || y < 0 ? undefined : board[y][x];
 
 // :-(
-export const getNeighbors = ({ board, x, y }) => {
+export const getNeighbors = ({ board = [], x = 0, y = 0 }) => {
   const neighbors = [];
   for (let i = Math.max(0, y - 1); i <= Math.min(board.length, y + 1); i++) {
     for (let j = Math.max(0, x - 1); j <= Math.min(board[0].length, x + 1); j++) {
@@ -28,7 +26,7 @@ export const getNeighbors = ({ board, x, y }) => {
   return neighbors;
 };
 
-export const generateBoard = ({ width, height }) =>
+export const generateBoard = ({ width = 0, height = 0 }) =>
   new Array(height).fill(new Array(width).fill(0));
 
 export const getUniqueNumbers = ({ length = 0, amount = 0 }) => {

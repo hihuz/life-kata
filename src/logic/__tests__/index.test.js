@@ -17,9 +17,9 @@ describe("countLiveNeighbors", () => {
   });
 
   test("should count the number of 1s in the passed array", () => {
-    const array = [1, 0, 1, 0, 0, 0, 1, 0, 0];
+    const neighbors = [1, 0, 1, 0, 0, 0, 1, 0, 0];
     const expected = 3;
-    const actual = countLiveNeighbors(array);
+    const actual = countLiveNeighbors(neighbors);
     expect(actual).toEqual(expected);
   });
 });
